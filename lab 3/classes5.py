@@ -1,17 +1,13 @@
 class bankAccount:
-    def __init__(self):
-        self.owner = ""
-        self.balance = 0
-
-    def getBalance(self):
-        self.owner = input("Введите ФИО: ")
-        self.balance = int(input("Введите ваш баланс: "))
+    def __init__(self, owner = "", balance = 0):
+        self.balance = balance
+        self.owner = owner
 
     def deposit(self):
         aqshaqosu = int(input("Сумма депозита: "))
         self.balance += aqshaqosu
         print("Успешно!")
-        print("Ваш текущий баланс(тг): {}".format(self.balance))
+        print(f"Ваш текущий баланс(тг): {self.balance}")
     
     def withdraww(self):
         withdraw = int(input("Сумма вывода: "))
@@ -20,10 +16,9 @@ class bankAccount:
         else:
             self.balance -= withdraw
             print("Успешно!")
-            print("Ваш текущий баланс: {}".format(self.balance))
+            print(f"Ваш текущий баланс: {self.balance}")
 
-bankOperation = bankAccount()
-bankOperation.getBalance()
+bankOperation = bankAccount(input("ФИО:"), int(input("Введите ваш баланс: ")))
 while True:
     typeoper = input("Введите тип операции (Withdraw/Deposit/Exit): ")
     if typeoper == "Withdraw":
