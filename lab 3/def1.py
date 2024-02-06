@@ -26,6 +26,30 @@ def solve(numheads, numlegs):
 numheads, numlegs = int(input("Heads:")), int(input("Legs:"))
 print("Answer:",solve(numheads, numlegs))
 
+# ex 4
+import math
+def filter_prime(lst):
+    primes = []
+    for x in lst:
+        if x < 2:
+            continue
+        is_prime = True
+        for i in range(2, int(math.sqrt(x)) + 1):
+            if x % i == 0:
+                is_prime = False
+                break
+        if is_prime:
+            primes.append(x)
+    return primes
+
+n = int(input())
+numbers = []
+for _ in range(n):
+    num = int(input())
+    numbers.append(num)
+
+print(filter_prime(numbers))
+
 # ex 5
 from itertools import permutations
 def permutations(string):
@@ -108,8 +132,11 @@ histogram([4, 9, 7])
 
 # ex 13
 import random
+def guesser():
+    global a
+    a = random.randint(1,20)
 name = input("Hello! What is your name?") # kbtu
-a = random.randint(1,20)
+guesser()
 cnt = 0
 while True:
     if cnt == 0:
@@ -127,6 +154,7 @@ while True:
         break
 
 # ex 14
+
 
     
 
