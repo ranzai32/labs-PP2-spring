@@ -134,7 +134,7 @@ histogram([4, 9, 7])
 import random
 def guesser():
     global a
-    a = random.randint(1,20)
+    a = random.randint(1,21)
 name = input("Hello! What is your name?") # kbtu
 guesser()
 cnt = 0
@@ -152,8 +152,18 @@ while True:
     elif a == b:
         print(f"Good job, {name}! You guessed my number in {cnt} guesses!")
         break
-
 # ex 14
+#Какой ты агент? 007,00x..
+import random
+def agent():
+    global id
+    id = random.randint(1,10)
+    return id
+print("Какой ты агент?")
+name = input("Для начала введите свое имя:")
+age = input("Ваш возраст:")
+print(f"Вы агент:00{agent()}")
+
 
 
     
