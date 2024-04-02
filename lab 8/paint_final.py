@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-fps = 60
+fps = 5000
 timer = pygame.time.Clock()
 WIDTH, HEIGHT = 800, 600
 active_size = 0

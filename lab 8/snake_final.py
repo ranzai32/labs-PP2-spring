@@ -86,7 +86,8 @@ def run_game():
                     x_speed = -snake_size # Так как наше начальное положение змеи это центр экрана, для движения змеи
                     y_speed = 0           # Мы имеем право сказать, что мы можем двигать ее по x-у или y-у на длину snake_size
 
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT: 
+                    
                     x_speed = snake_size
                     y_speed = 0
                     
@@ -112,7 +113,7 @@ def run_game():
         if len(snake_pixels) > snake_length:
             del snake_pixels[0]
             
-        for pixel in snake_pixels[:-1]:
+        for pixel in snake_pixels[:-1]: # Змея столкнулась сама с собой
             if pixel == [x,y]:
                 game_close = True
         

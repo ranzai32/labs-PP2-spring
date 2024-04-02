@@ -1,153 +1,82 @@
 import pygame
-from tkinter import *
-from PIL import Image, ImageDraw
-import PIL
+pygame.init()
 
+fps = 60
+timer = pygame.time.Clock()
+WIDTH, HEIGHT = 800, 600
+active_size = 0 # Дефолтные значения для кисти
+active_color = 'white' # Начальный цвет, порядок очень важен, так как если указать его позже наша программа выдаст ошибку
+painting = []
+tool = "brush"
 
-def main():
-    pygame.init()
-    WIDTH = 500
-    HEIGHT = 500
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    clock = pygame.time.Clock()
-    WHITE = (255,255,255)
-    radius = 15
-    x = 0
-    y = 0
-    mode = 'blue'
-    points = []
+screen = pygame.display.set_mode([WIDTH,HEIGHT])
+pygame.display.set_caption("Paint")
+
+def draw_menu(color, size):
+    pygame.draw.rect(screen, 'gray', [0, 0, WIDTH, 70])
+    pygame.draw.line(screen, 'black', (0,70), (WIDTH, 70))
+    xl_brush = pygame.draw.rect(screen, 'black', [10, 10, 50, 50])
+    pygame.draw.circle(screen, 'white', (35,35), 20)
+    l_brush = pygame.draw.rect(screen, 'black', [70, 10, 50, 50])
+    pygame.draw.circle(screen, 'white', (95,35), 15)
+    m_brush = pygame.draw.rect(screen, 'black', [130, 10, 50, 50])
+    pygame.draw.circle(screen, 'white', (155,35), 10)
+    s_brush = pygame.draw.rect(screen, 'black', [190, 10, 50, 50])
+    pygame.draw.circle(screen, 'white', (215,35), 5)
+    brush_list = [xl_brush, l_brush, m_brush, s_brush] # Создали список для наших кистей, потому что нам придется их выбирать
     
-    # class PaintGUI:
-
-    #     def __init__(self):
-    #         self.root = Tk()
-    #         self.root.title("Paint")
-
-    #         self.brush_w = 15
-    #         self.current_color = "#000000"
-
-    #         self.cnv = Canvas(self.root, width=WIDTH-10, height=HEIGHT-10, bg="white")
-    #         self.cnv.pack()
-    #         self.cnv.bind("<B1-Motion>", self.paint)
-
-    #         self.btn_frame = Frame(self.root)
-    #         self.btn_frame.pack(fill=X)
-
-    #         self.btn_frame.columnconfigure(0, weight=1)
-    #         self.btn_frame.columnconfigure(1, weight=1)
-    #         self.btn_frame.columnconfigure(2, weight=1)
-
-    #         self.clear_btn = Button(self.btn_frame, text="Очистить", command=self.clear)
-    #         self.clear_btn.grid(row=1, column=0, sticky="W+E")
-
-    #         self.rec_btn = Button(self.btn_frame, text="Прямоугольник", command=self.rec)
-    #         self.rec_btn.grid(row=1, column=1, sticky="W+E")
-
-    #         self.bminus_btn = Button(self.btn_frame, text="Тоньше", command=self.brush_minus)
-    #         self.bminus_btn.grid(row=0, column=0, sticky="W+E")
-
-    #         self.bplus_btn = Button(self.btn_frame, text="Толще", command=self.brush_plus)
-    #         self.bplus_btn.grid(row=0, column=1, sticky="W+E")
-
-    #         self.color_btn = Button(self.btn_frame, text="Изменить цвет", command=self.change_color)
-    #         self.color_btn.grid(row=1, column=2, sticky="W+E")
-
-    #     def paint(self, event):
-    #     # Метод для рисования
-    #         pass
-
-    #     def change_color(self):
-    #     # Метод для изменения цвета
-    #         pass
-
-    #     def brush_plus(self):
-    #     # Метод для увеличения размера кисти
-    #         pass
-
-    #     def brush_minus(self):
-    #     # Метод для уменьшения размера кисти
-    #         pass
-
-    #     def rec(self):
-    #     # Метод для рисования прямоугольника
-    #         pass
-
-    #     def clear(self):
-    #     # Метод для очистки холста
-    #         pass
-
-
-    while True:
-        
-        pressed = pygame.key.get_pressed()
-        
-        alt_held = pressed[pygame.K_LALT] or pressed[pygame.K_RALT]
-        ctrl_held = pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]
-        
-        for event in pygame.event.get():
-            
-            # determin if X was clicked, or Ctrl+W or Alt+F4 was used
-            if event.type == pygame.QUIT:
-                return
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w and ctrl_held:
-                    return
-                if event.key == pygame.K_F4 and alt_held:
-                    return
-                if event.key == pygame.K_ESCAPE:
-                    return
-            
-                # determine if a letter key was pressed
-                if event.key == pygame.K_r:
-                    mode = 'red'
-                elif event.key == pygame.K_g:
-                    mode = 'green'
-                elif event.key == pygame.K_b:
-                    mode = 'blue'
-            
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1: # left click grows radius
-                    radius = min(200, radius + 1)
-                elif event.button == 3: # right click shrinks radius
-                    radius = max(1, radius - 1)
-            
-            if event.type == pygame.MOUSEMOTION:
-                # if mouse moved, add point to list
-                position = event.pos
-                points = points + [position]
-                points = points[:]
-                
-        screen.fill((0, 0, 0))
-        
-        # draw all points
-        i = 0
-        while i < len(points) - 1:
-            drawLineBetween(screen, i, points[i], points[i + 1], radius, mode)
-            i += 1
-        pygame.display.flip()
-        
-        clock.tick(60)
-
-def drawLineBetween(screen, index, start, end, width, color_mode):
-    c1 = max(0, min(255, 2 * index - 256))
-    c2 = max(0, min(255, 2 * index))
+    pygame.draw.circle(screen, color, (400,35),30)
+    circle_button = pygame.draw.rect(screen, 'black', [250, 10, 50, 50]) 
+    pygame.draw.circle(screen, 'white', (275, 35), 20)
+    rectangle_button = pygame.draw.rect(screen, 'black', [310, 10, 50, 50]) 
+    pygame.draw.rect(screen, 'white', [315, 15, 40, 40]) 
     
-    if color_mode == 'blue':
-        color = (c1, c1, c2)
-    elif color_mode == 'red':
-        color = (c2, c1, c1)
-    elif color_mode == 'green':
-        color = (c1, c2, c1)
+    blue = pygame.draw.rect(screen, (0,0,255), [WIDTH - 35, 10, 25, 25])
+    red = pygame.draw.rect(screen, (255,0,0), [WIDTH - 35, 35, 25, 25])
+    green = pygame.draw.rect(screen, (0,255,0), [WIDTH - 60, 10, 25, 25])
+    yellow = pygame.draw.rect(screen, (255,255,0), [WIDTH - 60, 35, 25, 25])
+    teal = pygame.draw.rect(screen, (0,255,255), [WIDTH - 85, 10, 25, 25])
+    purple = pygame.draw.rect(screen, (255,0,255), [WIDTH - 85, 35, 25, 25])
+    white = pygame.draw.rect(screen, (255,255,255), [WIDTH - 110, 10, 25, 25])  
+    black = pygame.draw.rect(screen, (0,0,0), [WIDTH - 110, 35, 25, 25])
+    color_rect = [blue, red, green, yellow, teal, purple, white, black]
+    rgb_list = [(0,0,255), (255,0,0), (0,255,0), (255,255,0), (0,255,255), (255,0,255), 
+                (255,255,255), (0,0,0)]
+    tool_list = [circle_button, rectangle_button]
     
-    dx = start[0] - end[0]
-    dy = start[1] - end[1]
-    iterations = max(abs(dx), abs(dy))
-    
-    for i in range(iterations):
-        progress = 1.0 * i / iterations
-        aprogress = 1 - progress
-        x = int(aprogress * start[0] + progress * end[0])
-        y = int(aprogress * start[1] + progress * end[1])
-        pygame.draw.circle(screen, color, (x, y), width)
+    return brush_list, color_rect, rgb_list, tool_list # Возвращаем значение кистей, цветов
 
-main()
+def draw_painting(paints):
+    for i in range(len(paints)):
+        pygame.draw.circle(screen, paints[i][0], paints[i][1], paints[i][2], paints[i][3])
+
+running = True
+while running:
+    timer.tick(fps)
+    screen.fill("white")
+    mouse = pygame.mouse.get_pos()
+    left_click = pygame.mouse.get_pressed()[0]
+    
+    if left_click and mouse[1] > 70:
+        painting.append((active_color, mouse, active_size, tool))
+    draw_painting(painting)
+    if mouse[1] > 70:
+        pygame.draw.circle(screen, active_color, mouse, active_size)
+    brushes, colors, rgbs, tool = draw_menu(active_color, active_size)
+         
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for i in range(len(brushes)):
+                if brushes[i].collidepoint(event.pos):
+                    active_size = 20 - (i * 5)
+                    
+            for i in range(len(colors)):
+                if colors[i].collidepoint(event.pos):
+                    active_color = rgbs[i]
+    pygame.display.flip()
+    
+pygame.quit()
