@@ -141,10 +141,10 @@ while running:
                 if drawStarted:
                     pos = event.pos
                     a = abs(((pos[0] - startPos[0])**2 + (pos[1] - startPos[1])**2)**0.5)
-                    points.append(((pos[0]),(pos[1]))) # x1
+                    points.append(((startPos[0]),(startPos[1]))) # x1
                     points.append(((startPos[0]), (startPos[1] - a))) # x3
-                    points.append(((startPos[0] + a), startPos[1])) # x2
                     points.append(((startPos[0] + a), (startPos[1] - a))) # x4
+                    points.append(((startPos[0] + a), startPos[1])) # x2
                     pygame.draw.polygon(screen, active_color, points)
                     painting.append(('square', active_color, points))
             if event.type == pygame.MOUSEBUTTONUP:
