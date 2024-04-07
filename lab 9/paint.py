@@ -62,7 +62,7 @@ def draw_painting(paints):
         elif paints[i][0] == 'righttriangle':
             pygame.draw.polygon(screen, paints[i][1], paints[i][2]) 
         elif paints[i][0] =='square':
-            pygame.draw.rect(screen, paints[i][1], paints[i][2])
+            pygame.draw.polygon(screen, paints[i][1], paints[i][2])
         elif paints[i][0] == 'equilateral_triangle':
             pygame.draw.polygon(screen, paints[i][1], paints[i][2])
         elif paints[i][0] == 'rhombus':
@@ -92,7 +92,7 @@ while running:
                     painting.append(('circle', active_color, (startPos[0], startPos[1]), radius))
             if event.type == pygame.MOUSEBUTTONUP:
                 drawStarted = False
-        elif current_tool == "rectangle":
+        elif current_tool == 'rectangle':
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 drawStarted = True
                 startPos = event.pos
@@ -110,10 +110,12 @@ while running:
                     points.append((height))
                     pygame.draw.rect(screen, active_color, points)
                     painting.append(('rectangle', active_color, points))
+        
             if event.type == pygame.MOUSEBUTTONUP:
                 drawStarted = False
+                current_tool = 'brush'
 
-        elif current_tool == "righttriangle":
+        elif current_tool == 'righttriangle':
             points = []
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 drawStarted = True
@@ -129,6 +131,63 @@ while running:
                     painting.append(('righttriangle', active_color,points))
             if event.type == pygame.MOUSEBUTTONUP:
                 drawStarted = False
+                current_tool = 'brush'
+        elif current_tool == 'square':
+            points = []
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                drawStarted = True
+                startPos = event.pos
+            if event.type == pygame.MOUSEMOTION:
+                if drawStarted:
+                    pos = event.pos
+                    a = abs(((pos[0] - startPos[0])**2 + (pos[1] - startPos[1])**2)**0.5)
+                    points.append(((pos[0]),(pos[1]))) # x1
+                    points.append(((startPos[0]), (startPos[1] - a))) # x3
+                    points.append(((startPos[0] + a), startPos[1])) # x2
+                    points.append(((startPos[0] + a), (startPos[1] - a))) # x4
+                    pygame.draw.polygon(screen, active_color, points)
+                    painting.append(('square', active_color, points))
+            if event.type == pygame.MOUSEBUTTONUP:
+                drawStarted = False
+                current_tool = "brush"
+        elif current_tool == 'equilateral_triangle':
+            points = []
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                drawStarted = True
+                startPos = event.pos
+            if event.type == pygame.MOUSEMOTION:
+                if drawStarted:
+                    pos = event.pos
+                    a = abs(((pos[0] - startPos[0])**2 + (pos[1] - startPos[1])**2)**0.5)
+                    points.append(((startPos[0]),startPos[1])) # x1
+                    points.append(((pos[0] - (pos[0] - startPos[0])), (pos[1] - a))) # x2
+                    points.append(((pos[0] + (pos[0] - startPos[0])), (pos[1] - a))) # x3
+                    pygame.draw.polygon(screen, active_color, points)
+                    painting.append(('equilateral_triangle', active_color, points))
+            if event.type == pygame.MOUSEBUTTONUP:  
+                drawStarted = False
+                current_tool = "brush"
+        elif current_tool == 'rhombus':
+            points = []
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                drawStarted = True
+                start_vertex = event.pos  # Начальная вершина
+            if event.type == pygame.MOUSEMOTION:
+                if drawStarted:
+                    opposite_vertex = event.pos  # Противоположная вершина
+                    # Находим координаты середины диагонали
+                    diagonal_midpoint = ((start_vertex[0] + opposite_vertex[0]) / 2, (start_vertex[1] + opposite_vertex[1]) / 2)
+                    # Находим координаты одной из сторон ромба, находящейся на том же расстоянии от середины диагонали
+                    side_vertex = (diagonal_midpoint[0] + (opposite_vertex[1] - start_vertex[1]), diagonal_midpoint[1] - (opposite_vertex[0] - start_vertex[0]))
+                    # Находим координаты второй стороны ромба
+                    side_vertex_2 = (diagonal_midpoint[0] - (opposite_vertex[1] - start_vertex[1]), diagonal_midpoint[1] + (opposite_vertex[0] - start_vertex[0]))
+                    # Отрисовываем ромб на экране
+                    pygame.draw.polygon(screen, active_color, [start_vertex, opposite_vertex, side_vertex, side_vertex_2])
+                    # Добавляем ромб в список рисунков
+                    painting.append(('rhombus', active_color, [start_vertex, side_vertex,opposite_vertex, side_vertex_2]))
+            if event.type == pygame.MOUSEBUTTONUP:
+                drawStarted = False
+                current_tool = "brush"
     draw_painting(painting)
     if mouse[1] > 70 and current_tool == 'brush':  
         pygame.draw.circle(screen, active_color, mouse, active_size)
