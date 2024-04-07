@@ -102,10 +102,10 @@ while not done:
     
     # print(next(enumerate(block_list)))
     
-    [pygame.draw.rect(screen, color_list[color], block)
-     for color, block in enumerate (block_list)] #drawing blocks
-    [pygame.draw.rect(screen, bonus_color_list[color], block)
-     for color, block in enumerate (bonus_block_list)] #drawing blocks
+    # [pygame.draw.rect(screen, color_list[color], block)
+    #  for color, block in enumerate (block_list)] #drawing blocks
+    # [pygame.draw.rect(screen, bonus_color_list[color], block)
+    #  for color, block in enumerate (bonus_block_list)] #drawing blocks
     [pygame.draw.rect(screen, 'white', block)
      for color, block in enumerate (unremoveble_block_list)] #drawing blocks
     pygame.draw.rect(screen, pygame.Color(255, 255, 255), paddle)
@@ -126,42 +126,42 @@ while not done:
     if ball.colliderect(paddle) and dy > 0:
         dx, dy = detect_collision(dx, dy, ball, paddle)
         
-    #Collision blocks
-    hitIndex = ball.collidelist(block_list)
+    # #Collision blocks
+    # hitIndex = ball.collidelist(block_list)
 
-    if hitIndex != -1:
-        hitRect = block_list.pop(hitIndex)
-        hitColor = color_list.pop(hitIndex)
+    # if hitIndex != -1:
+    #     hitRect = block_list.pop(hitIndex)
+    #     hitColor = color_list.pop(hitIndex)
         
-        dx, dy = detect_collision(dx, dy, ball, hitRect)
-        game_score += 1
-        collision_sound.play()
+    #     dx, dy = detect_collision(dx, dy, ball, hitRect)
+    #     game_score += 1
+    #     collision_sound.play()
 
-    #Collision with bonus blocks
-    hitIndex = ball.collidelist(bonus_block_list)
+    # #Collision with bonus blocks
+    # hitIndex = ball.collidelist(bonus_block_list)
     
-    block_execution_time = 5000
+    # block_execution_time = 5000
 
-    if hitIndex != -1:
-        hitRect = bonus_block_list.pop(hitIndex)
-        hitColor = bonus_color_list.pop(hitIndex)
-        start_time = pygame.time.get_ticks()
-        current_time = pygame.time.get_ticks()
-        paddleW = 3 * paddleW
-        if start_time - current_time  == block_execution_time:
-            paddleW = 150
+    # if hitIndex != -1:
+    #     hitRect = bonus_block_list.pop(hitIndex)
+    #     hitColor = bonus_color_list.pop(hitIndex)
+    #     start_time = pygame.time.get_ticks()
+    #     current_time = pygame.time.get_ticks()
+    #     paddleW = 3 * paddleW
+    #     if start_time - current_time  == block_execution_time:
+    #         paddleW = 150
             
-        dx, dy = detect_collision(dx, dy, ball, hitRect)
-        for i in range(3):
-            pygame.draw.circle(screen, pygame.Color(255, 0, 0), ball.center, ballRadius)
-        game_score += 1
-        collision_sound.play()
+    #     dx, dy = detect_collision(dx, dy, ball, hitRect)
+    #     for i in range(3):
+    #         pygame.draw.circle(screen, pygame.Color(255, 0, 0), ball.center, ballRadius)
+    #     game_score += 1
+    #     collision_sound.play()
         
     #Collision with unremoveble blocks
     hitIndex = ball.collidelist(unremoveble_block_list)
 
     if hitIndex != -1:  
-        dx, dy = detect_collision(dx, dy, ball, hitRect)
+        dx, dy = detect_collision(dx, dy, ball, )
         collision_sound.play()
     
     #Speed up    
