@@ -100,9 +100,7 @@ enemies.add(E1)
 coins = pygame.sprite.Group()
 coins.add(E2)
 all_sprites = pygame.sprite.Group()
-all_sprites.add(P1)
-all_sprites.add(E1)
-all_sprites.add(E2)
+all_sprites.add(P1, E1, E2)
  
 #Adding a new User event 
 INC_SPEED = pygame.USEREVENT + 1
@@ -125,12 +123,18 @@ while running:
     for entity in all_sprites:
         DISPLAYSURF.blit(entity.image, entity.rect)
         entity.move()
-    
-    if pygame.sprite.spritecollideany(P1, coins):
+        
+    collided_coins = pygame.sprite.spritecollide(P1, coins, True)
+    for coin in collided_coins:
         COINS += 1
+        new_coin = Coin()
+        coins.add(new_coin)
+        all_sprites.add(new_coin)
+        new_coin.rect.top = 0
+        new_coin.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
     
-    coins1 = collected_coins.render(str(COINS), True, BLACK)
-    DISPLAYSURF.blit(coins1, (SCREEN_WIDTH / 2,10))
+    coisin = collected_coins.render(f"Score: {str(COINS)}", True, BLACK)
+    DISPLAYSURF.blit(coisin, (SCREEN_WIDTH / 2,10))
     
     if pygame.sprite.spritecollideany(P1, enemies):
           pygame.mixer.Sound('crash.mp3').play()

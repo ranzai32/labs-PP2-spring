@@ -96,7 +96,7 @@ class BigCoin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load('free-icon-dollar-coin-9787486-fotor-2024030511740.png')
-        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.transform.scale(self.image,(60,60))
         self.rect = self.image.get_rect()
     def move(self):
         self.rect.move_ip(0, SPEED)
@@ -147,6 +147,7 @@ while True:
         all_sprites.add(new_coin)
         new_coin.rect.top = 0
         new_coin.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
+        
         if coin2 % 10 == 0:
             SPEED += 1
             new_coin = BigCoin()
@@ -160,13 +161,13 @@ while True:
         big_coin.kill()
 
     # Moves and Re-draws all Sprites
-    for entity in all_sprites:
+    for entity in all_sprites: 
         DISPLAYSURF.blit(entity.image, entity.rect)
         entity.move()
 
     # To be run if collision occurs between Player and Enemy
     if pygame.sprite.spritecollideany(P1, enemies):
-        pygame.mixer.Sound('crash.wav').play()
+        pygame.mixer.Sound('crash.wav').play(5)
         time.sleep(0.5)
 
         DISPLAYSURF.fill(RED)
